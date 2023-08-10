@@ -11,6 +11,7 @@ type Config struct {
 		User     string `json:"user"`
 		Password string `json:"password"`
 		Host     string `json:"host"`
+		Port     string `json:"port"`
 		Name     string `json:"name"`
 	} `json:"db"`
 }
@@ -29,11 +30,13 @@ func LoadConfig(path string) (*Config, error) {
 			User     string `json:"user"`
 			Password string `json:"password"`
 			Host     string `json:"host"`
+			Port     string `json:"port"`
 			Name     string `json:"name"`
 		}{
 			User:     viper.GetString("db.user"),
 			Password: viper.GetString("db.password"),
 			Host:     viper.GetString("db.host"),
+			Port:     viper.GetString("db.port"),
 			Name:     viper.GetString("db.name"),
 		},
 	}
@@ -53,6 +56,9 @@ func (cfg *Config) Validate() error {
 	}
 	if cfg.DB.Host == "" {
 		return errors.New("db.host must not be empty")
+	}
+	if cfg.DB.Port == "" {
+		return errors.New("db.port must not be empty")
 	}
 	if cfg.DB.Name == "" {
 		return errors.New("db.name must not be empty")

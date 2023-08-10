@@ -1,9 +1,0 @@
-{
-  "port": "8080",
-  "db": {
-    "user" : "kursUser",
-    "password": "kursPswd",
-    "host": "localhost",
-    "name": "TEST"
-  }
-}

@@ -1,0 +1,83 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Currency Exchange Service"
+  description: "A service to interact with currency exchange rates, provided by the National Bank of Republic Kazakhstan."
+
+host: "localhost:8080"
+basePath: "/"
+schemes:
+  - "http"
+
+paths:
+  /currency/save/{date}:
+    get:
+      tags:
+        - "Currency"
+      summary: "Save currency rates for a given date"
+      description: "Fetches currency exchange rates for a specific date and saves them into the system."
+      parameters:
+        - name: "date"
+          in: "path"
+          description: "Date in the format 'dd.mm.yyyy' for which the currency rates should be fetched."
+          required: true
+          type: "string"
+          format: "date"
+      responses:
+        200:
+          description: "Currency rates were successfully saved."
+          schema:
+            type: "object"
+            properties:
+              success:
+                type: "boolean"
+        400:
+          description: "Invalid input provided, e.g., incorrect date format."
+        500:
+          description: "Internal server error, e.g., failed to save currency, failed to encode response."
+
+  /currency/{date}/{code}:
+    get:
+      tags:
+        - "Currency"
+      summary: "Get currency rate for a given date and code"
+      description: "Fetches currency exchange rate for a specific date and currency code."
+      parameters:
+        - name: "date"
+          in: "path"
+          description: "Date in the format 'dd.mm.yyyy'."
+          required: true
+          type: "string"
+          format: "date"
+        - name: "code"
+          in: "path"
+          description: "Currency code (e.g., USD, EUR)."
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Currency rate successfully fetched."
+          schema:
+            $ref: "#/definitions/Currency"
+        400:
+          description: "Invalid input provided."
+        404:
+          description: "Currency not found."
+        500:
+          description: "Internal server error."
+
+definitions:
+  Currency:
+    type: "object"
+    properties:
+      ID:
+        type: "integer"
+      Title:
+        type: "string"
+      Code:
+        type: "string"
+      Value:
+        type: "number"
+      Date:
+        type: "string"
+        format: "date-time"
