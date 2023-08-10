@@ -17,14 +17,29 @@ type UseCase struct {
 }
 
 func (u *UseCase) SaveCurrenciesAsync(ctx context.Context, currencies []*model.Currency) error {
+	done := make(chan struct{}) // Канал для сигнала завершения горутин
+	errChan := make(chan error) // Канал для ошибок
+
 	for _, currency := range currencies {
 		go func(c *model.Currency) {
 			err := u.Repo.Save(ctx, c)
 			if err != nil {
 				log.Printf("Error saving currency: %s", err)
+				errChan <- err // Отправляем ошибку в канал
 			}
+			done <- struct{}{} // Отправляем сигнал о завершении в канал
 		}(currency)
 	}
+
+	// Ждем завершения всех горутин
+	for range currencies {
+		select {
+		case <-done:
+		case err := <-errChan:
+			return err
+		}
+	}
+
 	return nil
 }
 

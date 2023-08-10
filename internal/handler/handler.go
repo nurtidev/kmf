@@ -31,6 +31,11 @@ func (h *Handler) SaveCurrency(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if len(rates) == 0 {
+		http.Error(w, "Empty rates by provided date", http.StatusBadRequest)
+		return
+	}
+
 	currencies := convertRatesToCurrencies(rates, date)
 	if err = h.UseCase.SaveCurrenciesAsync(context.TODO(), currencies); err != nil {
 		log.Printf("Failed to save currency: %v\n", err)

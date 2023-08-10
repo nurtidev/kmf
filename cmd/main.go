@@ -52,7 +52,4 @@ func main() {
 	http.Handle("/", r)
 	fmt.Println("Application is running...")
 	log.Fatal(http.ListenAndServe(cfg.Port, r))
-
-	// Теперь ваш конфиг загружен и валидирован, и вы можете продолжить с остальным кодом
-
 }
